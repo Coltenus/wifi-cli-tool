@@ -43,7 +43,7 @@ fn main() {
     let mut option: i8 = -1;
     while option != 0 {
         option = -1;
-        let line = scan_string_with_message("Enter option\n1) Get info\n2) Connect\n3) Disconnect\n0) Exit\n", true);
+        let line = scan_string_with_message("Enter an option\n1) Get info\n2) Connect\n3) Disconnect\n0) Exit\n", true);
         match line.parse::<i8>() {
             Ok(num) => {
                 option = num;
@@ -60,7 +60,7 @@ fn main() {
             },
             2 => {
                 let interface = wifi::action::get_interface();
-                let name = scan_string_with_message("Enter name of wifi\n", true);
+                let name = scan_string_with_message("Enter the name of your wifi\n", true);
                 let pass = scan_string_with_message("Enter your password\n", false);
                 wifi::action::connect(interface, &name, &pass, true);
             },
