@@ -40,6 +40,9 @@ pub mod action {
     use super::info::wifi_info;
     pub fn connect(interface: WiFi, name: &str, pass: &str, need_print: bool) -> WiFi {
         let mut interf = interface;
+        if name.is_empty() {
+            return interf;
+        }
         interf = disconnect(interf, false);
         match interf.connect(name, pass) {
             Ok(_) => {
