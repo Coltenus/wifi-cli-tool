@@ -98,6 +98,7 @@ fn main() {
                     if !sum.is_zero() {
                         println!("Ping({}) - {:?}", i, sum/hosts.len().try_into().unwrap());
                     }
+                    std::thread::sleep(Duration::from_secs(1));
                 }
                 scan_string_with_message("", false);
             }
