@@ -1,5 +1,5 @@
 # wifi-cli-tool
-A simple cli tool to get your wifi info and connect to network or disconnect.
+A simple cli tool to get your wifi info, check ping and connect to network or disconnect.
 
 ```terminal
 >> wifi-cli.exe
