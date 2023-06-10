@@ -3,6 +3,7 @@ use std::time::Duration;
 mod wifi;
 mod highlighter;
 mod ping;
+mod speed;
 
 fn scan_string_with_message(message: &str, mask: bool) -> String {
     use std::io::{stdout,Write};
@@ -47,7 +48,7 @@ fn main() {
         option = -1;
         let line = scan_string_with_message(&("Enter an option\n".to_owned()
         + "1) Get info\n2) Connect\n3) Disconnect\n4) Get ping\n5) Check selected hosts ping\n"
-        + "6) Check selected ips\n0) Exit\n"), false);
+        + "6) Check selected ips\n7) Check download\\upload speed\n0) Exit\n"), false);
         match line.parse::<i8>() {
             Ok(num) => {
                 option = num;
@@ -75,6 +76,7 @@ fn main() {
                 let hosts: Vec<&str> = vec!["google.com", "youtube.com", "reddit.com", "github.com"];
                 let count_str = scan_string_with_message("Enter count of iteration\n", false);
                 let mut count = 1;
+                let delay = 1;
                 match count_str.parse::<i32>() {
                     Ok(num) => {
                         count = num;
@@ -98,7 +100,7 @@ fn main() {
                     if !sum.is_zero() {
                         println!("Ping({}) - {:?}", i, sum/hosts.len().try_into().unwrap());
                     }
-                    std::thread::sleep(Duration::from_secs(1));
+                    std::thread::sleep(Duration::from_secs(delay));
                 }
                 scan_string_with_message("", false);
             }
@@ -107,6 +109,7 @@ fn main() {
                 let mut hosts: Vec<String> = hosts_str.split(' ').map(|s| s.to_string()).collect();
                 let count_str = scan_string_with_message("Enter count of iteration\n", false);
                 let mut count = 1;
+                let delay = 1;
                 match count_str.parse::<i32>() {
                     Ok(num) => {
                         count = num;
@@ -138,7 +141,7 @@ fn main() {
                     if !sum.is_zero() {
                         println!("Ping({}) - {:?}", i, sum/count);
                     }
-                    std::thread::sleep(Duration::from_secs(1));
+                    std::thread::sleep(Duration::from_secs(delay));
                 }
                 print!("Working hosts:");
                 for host in hosts {
@@ -152,6 +155,7 @@ fn main() {
                 let mut ips: Vec<String> = ips_str.split(' ').map(|s| s.to_string()).collect();
                 let count_str = scan_string_with_message("Enter count of iteration\n", false);
                 let mut count = 1;
+                let delay = 1;
                 match count_str.parse::<i32>() {
                     Ok(num) => {
                         count = num;
@@ -184,13 +188,46 @@ fn main() {
                     if !sum.is_zero() {
                         println!("Ping({}) - {:?}", i, sum/count);
                     }
-                    std::thread::sleep(Duration::from_secs(1));
+                    std::thread::sleep(Duration::from_secs(delay));
                 }
                 print!("Working hosts:");
                 for ip in ips {
                     print!(" {}", ip);
                 }
                 println!();
+                scan_string_with_message("", false);
+            }
+            7 => {
+                let num = scan_string_with_message("Enter count of iteration\n", false);
+                let mut count = 10;
+                match num.parse::<u64>() {
+                    Ok(n) => {
+                        count = n;
+                    },
+                    Err(_) => {}
+                }
+                let mut system = speed::get_system();
+                let mut state_d: u64 = 0;
+                let mut state_u: u64 = 0;
+                let mut sum_d: u64 = 0;
+                let mut sum_u: u64 = 0;
+                let speed_size = 1024;
+                let delay = 1;
+
+                for _i in 0..count {
+                    let bytes_d = speed::get_bytes(&mut system, &mut state_d, 1);
+                    let bytes_u = speed::get_bytes(&mut system, &mut state_u, 2);
+
+                    sum_d += bytes_d/speed_size;
+                    sum_u += bytes_u/speed_size;
+
+                    println!("Speed: D - {}\t Kbps, U - {}\t Kbps", bytes_d/speed_size, bytes_u/speed_size);
+
+                    std::thread::sleep(Duration::from_secs(delay));
+                    speed::refresh_system(&mut system);
+                }
+
+                println!("Average: D - {}\t Kbps, U - {}\t Kbps", sum_d/count, sum_u/count);
                 scan_string_with_message("", false);
             }
             _ => {
