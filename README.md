@@ -1,5 +1,5 @@
 # wifi-cli-tool
-A simple cli tool to get your wifi info, check ping and connect to network or disconnect.
+A simple cli tool to get your wifi info, check ping or current speed and connect to network or disconnect.
 
 ```terminal
 >> wifi-cli.exe
@@ -116,6 +116,26 @@ Ping(2) - 38.2µs
 Ping(3) - 51.2µs
 Ping(4) - 31.5µs
 Working hosts: 127.0.0.1
+>
+
+Enter an option
+1) Get info
+2) Connect
+3) Disconnect
+4) Get ping
+5) Check selected hosts ping
+6) Check selected ips
+7) Check download\upload speed
+0) Exit
+> 7
+Enter count of iteration
+> 5
+Speed: D - 0     Kbps, U - 0     Kbps
+Speed: D - 79    Kbps, U - 8     Kbps
+Speed: D - 562   Kbps, U - 27    Kbps
+Speed: D - 797   Kbps, U - 21    Kbps
+Speed: D - 746   Kbps, U - 19    Kbps
+Average: D - 436         Kbps, U - 15    Kbps
 >
 
 Enter an option
